@@ -8,6 +8,8 @@ export function debounce(func,delay) {
   }
 }
 
+
+
 //  正则表达式是干嘛的？ 字符串匹配利器（难，规则太多）
 export function formatDate(date, fmt) {
   //  1.获取年份

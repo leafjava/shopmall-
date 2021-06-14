@@ -37,6 +37,7 @@
   import {debounce} from 'common/utils'
 
   import {getHomeMultidata, getHomeGoods} from "network/home"
+  import {itemListenerMixin} from 'common/mixin'
 
 
 
@@ -55,7 +56,7 @@
         isShowBackTop: false,
         tabOffsetTop:0,
         isTabFixed: false,
-        saveY: 0
+        saveY: 0,
       }
     },
     components:{
@@ -68,6 +69,7 @@
       Scroll,
       BackTop
     },
+    mixins:[itemListenerMixin],
     created() {
       //  1.请求多个数据
       this.getHomeMultidata()
@@ -79,15 +81,7 @@
 
 
     },
-    mounted() {
-      //  1.图片加载完成的事件监听
-      const refresh = debounce(this.$refs.scroll.refresh, 200)
-      //  3.监听item中图片加载完成
-      this.$bus.$on('itemImageLoad', () => {
-        refresh()
-        // this.$refs.scroll.refresh()
-      })
-    },
+    mounted() {},
     methods:{
       //事件监听相关的方法
       //
@@ -172,7 +166,11 @@
     },
     deactivated() {
       // console.log('deactivated');
+      //  1.保存Y值
       this.saveY = this.$refs.scroll.getScrollY()
+
+      //  2.取消全局事件的监听
+      this.$bus.$off('itemImgLoad',this.itemImgListener)
     }
   }
 </script>
