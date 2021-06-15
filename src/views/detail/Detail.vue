@@ -3,6 +3,11 @@
     <detail-nav-bar class="detail-nav" @titleClick="titleClick" ref="nav" />
     <scroll class="content" ref="scroll" :probe-type="3" @scroll="contentScroll">
       <!-- 属性： topImages  传入值: top-images -->
+      <ul>
+        <li v-for="item in $store.state.cartList">
+          {{item}}
+        </li>
+      </ul>
       <detail-swiper :top-images="topImages"/>
       <detail-base-info :goods="goods"/>
       <detail-shop-info :shop="shop"/>
@@ -194,12 +199,13 @@
         //  1.获取购物车需要展示的信息
         const product = {}
         product.image = this.topImages[0];
-        product.title = this.goodsInfo.title;
-        product.desc = this.goodsInfo.desc;
-        product.price = this.goodsInfo.realPrice;
+        product.title = this.goods.title;
+        product.desc = this.goods.desc;
+        product.price = this.goods.realPrice;
         product.iid = this.iid;
 
         //  2.将商品加入到购物车里面
+        this.$store.commit('addCart',product)
       }
     },
     mounted() {
