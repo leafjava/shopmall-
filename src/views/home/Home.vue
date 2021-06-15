@@ -37,7 +37,7 @@
   import {debounce} from 'common/utils'
 
   import {getHomeMultidata, getHomeGoods} from "network/home"
-  import {itemListenerMixin} from 'common/mixin'
+  import {itemListenerMixin, backTopMixin} from 'common/mixin'
 
 
 
@@ -53,7 +53,7 @@
           'sell': {page: 0,list: []}
         },
         currentType: 'pop',
-        isShowBackTop: false,
+        // isShowBackTop: false,
         tabOffsetTop:0,
         isTabFixed: false,
         saveY: 0,
@@ -66,10 +66,10 @@
       NavBar,
       TabControl,
       GoodList,
-      Scroll,
-      BackTop
+      Scroll
+      // BackTop
     },
-    mixins:[itemListenerMixin],
+    mixins:[itemListenerMixin, backTopMixin],
     created() {
       //  1.请求多个数据
       this.getHomeMultidata()
@@ -100,9 +100,9 @@
         this.$refs.tabControl1.currentIndex = index;
         this.$refs.tabControl2.currentIndex = index;
       },
-      backClick() {
-        this.$refs.scroll.scrollTo(0,0)
-      },
+      // backClick() {
+      //   this.$refs.scroll.scrollTo(0,0)
+      // },
       contentScroll(position) {
         // console.log(position);
         // if(position.y < -1000) {
@@ -110,8 +110,10 @@
         // }
         // else {this.isShowBackTop = false}
 
+        this.listenShowBackTop(position)
+
         //  1.判断BackTop是否显示
-        this.isShowBackTop = (-position.y) > 1000
+        // this.isShowBackTop = (-position.y) > 1000
 
         //  2.决定tabControl是否吸顶(position: fixed)
         this.isTabFixed = (-position.y) > this.tabOffsetTop
