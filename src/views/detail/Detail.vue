@@ -11,6 +11,7 @@
       <detail-comment-info ref="comment" :comment-info="commentInfo" />
       <goods-list ref="recommend" :goods="recommends"/>
     </scroll>
+    <detail-bottom-bar/>
   </div>
 </template>
 
@@ -24,6 +25,7 @@
   import DetailGoodsInfo from './childComps/DetailGoodsInfo'
   import DetailParamInfo from './childComps/DetailParamInfo'
   import DetailCommentInfo from './childComps/DetailCommentInfo'
+  import DetailBottomBar from './childComps/DetailBottomBar'
 
   import Scroll from 'components/common/scroll/Scroll'
   import GoodsList from 'components/content/goods/GoodsList'
@@ -42,6 +44,7 @@
       DetailGoodsInfo,
       DetailParamInfo,
       DetailCommentInfo,
+      DetailBottomBar,
       GoodsList,
       Scroll
     },
@@ -132,7 +135,7 @@
         this.themeTopYs.push(this.$refs.params.$el.offsetTop)
         this.themeTopYs.push(this.$refs.comment.$el.offsetTop)
         this.themeTopYs.push(this.$refs.recommend.$el.offsetTop)
-
+          this.themeTopYs.push(Number.MAX_VALUE)
         console.log(this.themeTopYs);
       }, 100)
     },
@@ -154,19 +157,28 @@
 
         //  2.positionY和主题中值进行对比
         //  [0, 7938, 9120, 9452]
+        //  Number.MAX_VALUE
         //  positionY 在 0 和 7938 之间, index = 0
         //  positionY 在 7938 和 9120 之间, index = 1
         //  positionY 在 9120 和 9452 之间, index = 2
         //  positionY 超过9120 值, index = 3
         let length = this.themeTopYs.length
-        for(let i = 0; i< length; i++) {
+        for(let i = 0; i< length - 1; i++) {
           // parseInt(i)
           // if (positionY > this.themeTopYs[i] && positionY < this.themeTopYs[i+1]) {
           //   console.log(i);  //str
           // }
-          if (this.currentIndex !== i && (i < length - 1 && positionY >= this.themeTopYs[i] && positionY < this.themeTopYs[i+1]) || (i === length - 1 && positionY >= this.themeTopYs[i])) {
+
+          //  P207
+          // if (this.currentIndex !== i && (i < length - 1 && positionY >= this.themeTopYs[i] && positionY < this.themeTopYs[i+1]) || (i === length - 1 && positionY >= this.themeTopYs[i])) {
+          //   this.currentIndex = i;
+          //   console.log(this.currentIndex);
+          //   this.$refs.nav.currentIndex = this.currentIndex
+          // }
+
+          //  P208优化
+          if(this.currentIndex !== i && (positionY >= this.themeTopYs[i] && positionY < this.themeTopYs[i+1])) {
             this.currentIndex = i;
-            console.log(this.currentIndex);
             this.$refs.nav.currentIndex = this.currentIndex
           }
         }
